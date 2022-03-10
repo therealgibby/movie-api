@@ -21,6 +21,15 @@ mvn install
 ````
 
 ## API Calls
+
+````
+# Request Body
+{
+        "title": "Movie Title",
+        "director": "Director Name",
+        "actors": "Actors, ..."
+}
+````
 #### /movies
 * `GET`: Get a movie
 * `POST`: Create a new movie
