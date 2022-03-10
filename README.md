@@ -18,3 +18,22 @@ git clone https://github.com/therealgibby/movie-api.git
 # Navigate to the repo & install with Maven
 cd movie-api
 mvn install
+````
+
+## API Calls
+
+````
+# Request Body
+{
+        "title": "Movie Title",
+        "director": "Director Name",
+        "actors": "Actors, ..."
+}
+````
+#### /movies
+* `GET`: Get a movie
+* `POST`: Create a new movie
+
+#### /movies/{id}
+* `PUT`: Update a movie
+* `DELETE`: Delete a movie
