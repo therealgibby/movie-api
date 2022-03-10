@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,7 +25,11 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public Movie getMovie(@PathVariable int id) {
-        return movieService.getMovie(id);
+        try {
+            return movieService.getMovie(id);
+        } catch (RuntimeException e) {
+            return new Movie(0, "", "", "");
+        }
     }
 
     @PostMapping("")
@@ -34,7 +37,7 @@ public class MovieController {
         try {
             movieService.addMovie(movie);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -44,7 +47,7 @@ public class MovieController {
         try {
             movieService.updateMovie(movie, id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -54,7 +57,7 @@ public class MovieController {
         try {
             movieService.deleteMovie(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }

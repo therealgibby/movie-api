@@ -1,12 +1,12 @@
 package com.example.movieapi.backend.service;
 
 import com.example.movieapi.backend.entity.Movie;
+import com.example.movieapi.backend.exceptions.DuplicateMovieException;
+import com.example.movieapi.backend.exceptions.MovieNotFoundException;
 import com.example.movieapi.backend.repository.MovieRepository;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -23,39 +23,35 @@ public class MovieService {
         return allMovies;
     }
 
-    public Movie getMovie(int id) {
-        return Optional.of(movieRepository.findById(id))
-                .get()
-                .orElse(new Movie(0, "N/A", "", ""));
+    public Movie getMovie(int id) throws RuntimeException {
+        return movieRepository.findById(id)
+                .orElseThrow(MovieNotFoundException::new);
     }
 
-    public void addMovie(Movie movie) throws IOException {
-        if(movieRepository.existsById(movie.getId())) {
-            throw new IOException("Movie Exists With Given ID");
-        }
-        if(movieRepository.existsByTitle(movie.getTitle())) {
-            throw new IOException("Movie Title Already In Database");
+    public void addMovie(Movie movie) throws RuntimeException {
+        if(movieRepository.existsById(movie.getId()) || movieRepository.existsByTitle(movie.getTitle())) {
+            throw new DuplicateMovieException("Movie Exists With Given ID Or Title");
         }
         if(movie.getTitle() == null || movie.getTitle().equals("")) {
-            throw new IOException("Movie Title Was Not Given");
+            throw new RuntimeException("Movie Title Was Not Given");
         }
         movieRepository.save(movie);
     }
 
-    public void updateMovie(Movie movie, int id) throws IOException{
-        if(!movieRepository.existsById(id)) {
-            throw new IOException("A Movie Was Not Found With Given ID");
-        }
+    public void updateMovie(Movie movie, int id) throws RuntimeException {
         if(movie.getId() != id) {
-            throw new IOException("Movie ID and ID in URL Do Not Match");
+            throw new RuntimeException("Movie ID and ID in URL Do Not Match");
+        }
+        if(!movieRepository.existsById(id)) {
+            throw new MovieNotFoundException("A Movie Was Not Found With Given ID");
         }
         movieRepository.save(movie);
     }
 
-    public void deleteMovie(int id) throws IOException{
+    public void deleteMovie(int id) throws RuntimeException {
         if(movieRepository.existsById(id))
             movieRepository.deleteById(id);
         else
-            throw new IOException("Movie ID Doesn't Exist");
+            throw new MovieNotFoundException("Movie ID Doesn't Exist");
     }
 }
