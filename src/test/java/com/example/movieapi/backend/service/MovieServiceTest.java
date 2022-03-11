@@ -68,18 +68,6 @@ public class MovieServiceTest {
     // POST
 
     @Test
-    @DisplayName("Should Fail When Movie Exists By Id")
-    public void shouldFailWhenMovieExistsById() {
-        Movie movie = new Movie(1, "Movie", "", "");
-
-        Mockito.when(movieRepository.existsById(movie.getId())).thenReturn(true);
-
-        DuplicateMovieException exception = assertThrows(DuplicateMovieException.class, () -> movieService.addMovie(movie));
-
-        assertTrue(exception.getMessage().contains("Movie Exists With Given ID Or Title"));
-    }
-
-    @Test
     @DisplayName("Should Fail When Movie Title Is Blank")
     public void shouldFailWhenMovieTitleIsBlank() {
         Movie movie = new Movie(1, "", "Director", "Actors");
@@ -87,6 +75,18 @@ public class MovieServiceTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> movieService.addMovie(movie));
 
         assertTrue(exception.getMessage().contains("Movie Title Was Not Given"));
+    }
+
+    @Test
+    @DisplayName("Should Fail When Movie Exists By Title")
+    public void shouldFailWhenMovieExistsByTitle() {
+        Movie movie = new Movie(1, "Movie", "", "");
+
+        Mockito.when(movieRepository.existsByTitle(movie.getTitle())).thenReturn(true);
+
+        DuplicateMovieException exception = assertThrows(DuplicateMovieException.class, () -> movieService.addMovie(movie));
+
+        assertTrue(exception.getMessage().contains("Movie Exists With Given Title"));
     }
 
     @Test
@@ -100,17 +100,6 @@ public class MovieServiceTest {
     }
 
     // PUT
-
-    @Test
-    @DisplayName("Should Fail If Path Variable Does Not Match Request Body")
-    public void shouldFailIfPathVariableDoesNotMatchRequestBody() {
-        Movie movie = new Movie(1, "Title", "Director", "Actors");
-        int idFromUrl = 2;
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> movieService.updateMovie(movie, idFromUrl));
-
-        assertTrue(exception.getMessage().contains("Movie ID and ID in URL Do Not Match"));
-    }
 
     @Test
     @DisplayName("Should Fail When Id Does Not Exist")
