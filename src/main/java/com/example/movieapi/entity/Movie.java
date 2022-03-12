@@ -1,4 +1,4 @@
-package com.example.movieapi.backend.entity;
+package com.example.movieapi.entity;
 
 import javax.persistence.*;
 

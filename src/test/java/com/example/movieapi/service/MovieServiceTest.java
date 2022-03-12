@@ -1,9 +1,10 @@
-package com.example.movieapi.backend.service;
+package com.example.movieapi.service;
 
-import com.example.movieapi.backend.entity.Movie;
-import com.example.movieapi.backend.exceptions.DuplicateMovieException;
-import com.example.movieapi.backend.exceptions.MovieNotFoundException;
-import com.example.movieapi.backend.repository.MovieRepository;
+import com.example.movieapi.entity.Movie;
+import com.example.movieapi.exceptions.DuplicateMovieException;
+import com.example.movieapi.exceptions.EmptyFieldException;
+import com.example.movieapi.exceptions.MovieNotFoundException;
+import com.example.movieapi.repository.MovieRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,6 @@ public class MovieServiceTest {
     public void setup() {
         movieService = new MovieService(movieRepository);
     }
-
 
     // GET
 
@@ -72,7 +72,7 @@ public class MovieServiceTest {
     public void shouldFailWhenMovieTitleIsBlank() {
         Movie movie = new Movie(1, "", "Director", "Actors");
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> movieService.addMovie(movie));
+        RuntimeException exception = assertThrows(EmptyFieldException.class, () -> movieService.addMovie(movie));
 
         assertTrue(exception.getMessage().contains("Movie Title Was Not Given"));
     }

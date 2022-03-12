@@ -1,6 +1,6 @@
-package com.example.movieapi.backend.repository;
+package com.example.movieapi.repository;
 
-import com.example.movieapi.backend.entity.Movie;
+import com.example.movieapi.entity.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {

@@ -1,9 +1,10 @@
-package com.example.movieapi.backend.service;
+package com.example.movieapi.service;
 
-import com.example.movieapi.backend.entity.Movie;
-import com.example.movieapi.backend.exceptions.DuplicateMovieException;
-import com.example.movieapi.backend.exceptions.MovieNotFoundException;
-import com.example.movieapi.backend.repository.MovieRepository;
+import com.example.movieapi.entity.Movie;
+import com.example.movieapi.exceptions.DuplicateMovieException;
+import com.example.movieapi.exceptions.EmptyFieldException;
+import com.example.movieapi.exceptions.MovieNotFoundException;
+import com.example.movieapi.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,15 +25,15 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public Movie getMovie(int id) throws RuntimeException {
+    public Movie getMovie(int id) {
         return movieRepository.findById(id)
                 .orElseThrow(MovieNotFoundException::new);
     }
 
     @Transactional
-    public void addMovie(Movie movieFromUser) throws RuntimeException {
+    public Movie addMovie(Movie movieFromUser) {
         if(movieFromUser.getTitle() == null || movieFromUser.getTitle().equals("")) {
-            throw new RuntimeException("Movie Title Was Not Given");
+            throw new EmptyFieldException("Movie Title Was Not Given");
         }
         if(movieRepository.existsByTitle(movieFromUser.getTitle())) {
             throw new DuplicateMovieException("Movie Exists With Given Title");
@@ -40,25 +41,26 @@ public class MovieService {
 
         Movie movie = new Movie(movieFromUser.getTitle(), movieFromUser.getDirector(), movieFromUser.getActors());
 
-        movieRepository.save(movie);
+        return movieRepository.save(movie);
     }
 
     @Transactional
-    public void updateMovie(Movie movieFromUser, int id) throws RuntimeException {
+    public Movie updateMovie(Movie movieFromUser, int id) {
         if(!movieRepository.existsById(id)) {
             throw new MovieNotFoundException("A Movie Was Not Found With Given ID");
         }
 
         Movie movie = new Movie(id, movieFromUser.getTitle(), movieFromUser.getDirector(), movieFromUser.getActors());
 
-        movieRepository.save(movie);
+        return movieRepository.save(movie);
     }
 
     @Transactional
-    public void deleteMovie(int id) throws RuntimeException {
-        if(movieRepository.existsById(id))
-            movieRepository.deleteById(id);
-        else
+    public void deleteMovie(int id) {
+        if(!movieRepository.existsById(id)) {
             throw new MovieNotFoundException("Movie ID Doesn't Exist");
+        }
+
+        movieRepository.deleteById(id);
     }
 }
