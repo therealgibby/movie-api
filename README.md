@@ -30,10 +30,10 @@ mvn install
         "actors": "Actors, ..."
 }
 ````
-#### /movies
+#### /api/movies
 * `GET`: Get a movie
 * `POST`: Create a new movie
 
-#### /movies/{id}
+#### /api/movies/{id}
 * `PUT`: Update a movie
 * `DELETE`: Delete a movie
