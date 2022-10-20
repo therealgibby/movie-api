@@ -23,7 +23,7 @@ mvn install
 ## API Calls
 
 ````
-# Request Body
+# POST & PUT Request Body
 {
         "title": "Movie Title",
         "director": "Director Name",
