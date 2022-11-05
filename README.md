@@ -2,6 +2,8 @@
 * Java
 * Spring
 * MySQL
+* JUnit
+* Mockito
 
 ## Environment Variables Required
 * SPRING_DATASOURCE_URL (database URL in JDBC format)
