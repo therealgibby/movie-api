@@ -1,7 +1,6 @@
 ## Technologies Used
 * Java
 * Spring
-* Hibernate
 * MySQL
 
 ## Environment Variables Required
